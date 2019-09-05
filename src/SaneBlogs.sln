@@ -9,7 +9,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Templating", "San
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Domain", "SaneBlogs.Domain\SaneBlogs.Domain.fsproj", "{FD80D14F-D229-42BC-BECC-45D4A0A541A6}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SaneBlogs.Tests", "SaneBlogs.Tests\SaneBlogs.Tests.fsproj", "{5969DE2F-DE91-4F6D-814E-3BE4E2846D95}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Tests", "SaneBlogs.Tests\SaneBlogs.Tests.fsproj", "{5969DE2F-DE91-4F6D-814E-3BE4E2846D95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

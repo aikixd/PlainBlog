@@ -2,11 +2,13 @@
 <html>
 
 <head>
-  <title>{{ document.title }}</title>
+  <title>{{ title }}</title>
 </head>
 
 <body>
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+    {{ posts }}
+    {{ for post in posts }}
+        {{ include "Post" post }}
+    {{ end }}
 </body>
 </html> 

@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SaneBlogs.Domain\SaneBlogs.Domain.fsproj" />
+    <ProjectReference Include="..\SaneBlogs.Templating\SaneBlogs.Templating.fsproj" />
+    <ProjectReference Include="..\SaneBlogs\SaneBlogs.fsproj" />
   </ItemGroup>
 
 </Project>

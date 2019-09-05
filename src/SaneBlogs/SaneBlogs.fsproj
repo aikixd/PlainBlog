@@ -6,7 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="PostsParse.fs" />
+    <Compile Include="PostsLoad.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SaneBlogs.Domain\SaneBlogs.Domain.fsproj" />
+    <ProjectReference Include="..\SaneBlogs.Templating\SaneBlogs.Templating.fsproj" />
   </ItemGroup>
 
 </Project>

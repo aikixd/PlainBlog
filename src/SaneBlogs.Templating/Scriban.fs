@@ -1,13 +1,12 @@
-﻿namespace SaneBlogs.Templating
+﻿module Engine
+
+open Domain
 
 type ScrTmpl = Scriban.Template
 
-module Scriban =
 
-    open Types
-    open System.IO
 
-    let parse (PathName path) =
-        match File.Exists path with
-        | true -> ScrTmpl.Parse(File.ReadAllText(path), path) |> Ok
-        | false -> sprintf "File '%s' doen't exist." path |> Error
+let parse (path: FilePath) =
+    let text = path.ReadAsText ()
+    Scriban.Template.Parse(text, path.Value)
+        

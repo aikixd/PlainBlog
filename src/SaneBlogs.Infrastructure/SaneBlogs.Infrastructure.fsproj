@@ -4,10 +4,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="Utility.fs" />
-    <Compile Include="Path.fs" />
-    <Compile Include="Post.fs" />
-  </ItemGroup>
-
 </Project>

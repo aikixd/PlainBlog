@@ -5,14 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Types.fs" />
     <Compile Include="Scriban.fs" />
     <Compile Include="IO.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Templates.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Scriban" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SaneBlogs.Domain\SaneBlogs.Domain.fsproj" />
   </ItemGroup>
 
 </Project>

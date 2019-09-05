@@ -1,0 +1,4 @@
+<article>
+    <H2>{{ title }}</H2>
+    {{ body }}
+</article>
