@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="PostsParse.fs" />
+    <Compile Include="Parse.fs" />
+    <Compile Include="Load.fs" />
     <Compile Include="PostsLoad.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

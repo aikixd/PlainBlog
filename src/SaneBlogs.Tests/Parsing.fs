@@ -7,11 +7,8 @@ module Docs =
     
     type DocTestCase =
         { input:               string
-          expectedTitle:       string
-          expectedPublishDate: System.DateTime
-          expectedBody:        string
-          expectedErrors:      string list
-          shouldSucceed:       bool }
+          expectedProps:       (string * string) list
+          expectedBody:        string }
 
     [<Literal>]
     let doc1 = 
@@ -23,17 +20,20 @@ module Docs =
 
     let case1 =
         { input = doc1
-          expectedTitle = "Some title"
-          expectedPublishDate = new System.DateTime(2010, 2, 1)
-          expectedBody = "# Header\r\nBody"
-          expectedErrors = []
-          shouldSucceed = true }
+          expectedProps = [ ("Title", "Some title")
+                            ("PublishDate", "2010-2-1") ]
+          expectedBody = "# Header\r\nBody" }
 
 
 open Docs
+open Parse
 
 [<TestClass>]
 type TestClass () =
+
+    let assertProp (ek, ev) prop =
+        Assert.AreEqual(ek, prop.key)
+        Assert.AreEqual(ev, prop.value)
 
     [<SetUp>]
     member this.Setup () =
@@ -45,16 +45,10 @@ type TestClass () =
     [<Test>]
     [<TestCaseSource("getCases")>]
     member this.ParsePost case =
-        let (result, errors) = Parse.parsePost case.input
-        
-        match result with
-        | Ok data ->
-            Assert.AreEqual(case.shouldSucceed, true)
-            Assert.AreEqual(case.expectedTitle, data.title.Value)
-            Assert.AreEqual(case.expectedPublishDate, data.publishDate.Value)
-            Assert.AreEqual(case.expectedBody, data.body.Value)
-        | Error x ->
-            Assert.AreEqual(case.shouldSucceed, false)
+        let (rest, props) = Parse.parseProps case.input
 
-        Assert.AreEqual(case.expectedErrors, errors)
+        List.rev props
+        |> List.iter2 assertProp case.expectedProps
+        
+        Assert.AreEqual(case.expectedBody, rest)
 
