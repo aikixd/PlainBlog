@@ -33,15 +33,16 @@ type private PostCtx =
     { title: string
       publishDate: System.DateTime
       body: string } with
-    static member fromPostData (data: PostData) =
+    static member fromPostData (data: Post) =
         { title = data.title.Value
           publishDate = data.publishDate.Value
           body = data.body.Value }
 
-type private Document = 
-    { posts: PostCtx[] }
+type Document<'a> = 
+    { title: string
+      content: 'a }
 
-type private Rig =
+type Rig =
     { rootTemplate: Scriban.Template
       templatesDir: DirPath } with
     member this.Render posts =
@@ -56,16 +57,28 @@ type private Rig =
         
         this.rootTemplate.Render(ctx)
 
+    member this.RenderPage page site doc posts =
+        let ctx = new Scriban.TemplateContext()
+
+        let so = new Scriban.Runtime.ScriptObject()
+        so.Add("doc", doc)
+        so.Add("site", site)
+        so.Add("page", page)
+        so.Add("posts", posts)
+
+        ctx.PushGlobal(so)
+
+        ctx.TemplateLoader <- new TemplateLoader(this.templatesDir)
+
+        this.rootTemplate.Render(ctx)
+
 let load (path: DirPath) =
     asserted { 
         let! rootFile = path.FindFile "Root.*" 
         let root = Engine.parse rootFile
-        let rig =
-            { rootTemplate = root 
-              templatesDir = path }
+        
+        return { rootTemplate = root 
+                 templatesDir = path }
 
-        let fn posts =
-            rig.Render posts
-
-        return fn
+        //return rig.RenderPage
     }

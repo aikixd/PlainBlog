@@ -45,10 +45,10 @@ type TestClass () =
     [<Test>]
     [<TestCaseSource("getCases")>]
     member this.ParsePost case =
-        let (rest, props) = Parse.parseProps case.input
+        let pd = Parse.parseProps case.input
 
-        List.rev props
+        List.rev pd.properties
         |> List.iter2 assertProp case.expectedProps
         
-        Assert.AreEqual(case.expectedBody, rest)
+        Assert.AreEqual(case.expectedBody, pd.body)
 

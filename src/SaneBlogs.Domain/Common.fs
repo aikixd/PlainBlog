@@ -1,11 +1,11 @@
-namespace Domain
+﻿namespace Domain
 
 [<AutoOpen>]
-module Data =
+module Common =
 
     [<AutoOpen>]
-    module PostTitleModule =
-        type PostTitle = | X of string with
+    module TitleModule =
+        type Title = | X of string with
         member x.Value =
             match x with | X x -> x
         static member create title =
@@ -17,28 +17,26 @@ module Data =
                 Ok (X title)
 
     [<AutoOpen>]
-    module PostPublishDateModule =
-        type PostPublishDate = | X of System.DateTime with
+    module PublishDateModule =
+        type PublishDate = | X of System.DateTime with
         member x.Value =
             match x with | X x -> x
         static member create date =
             X date
+        static member parse (input: string) =
+            match System.DateTime.TryParse input with
+            | (true, v) -> Ok (PublishDate.create v)
+            | (false, _) -> Error (sprintf "Date was not in the correct format.")
 
     [<AutoOpen>]
-    module PostBodyModule =
-        type PostBody = | X of string with
+    module BodyModule =
+        type Body = | X of string with
         member x.Value =
             match x with | X x -> x
         static member create body =
             if System.String.IsNullOrWhiteSpace(body) then
-                Error "Title must not be empty."
+                Error "Body must not be empty."
             elif body.Length < 2 then
-                Error "Title must be at least two chars long."
+                Error "Body must be at least two chars long."
             else
                 Ok (X body)
-    
-    type PostData = 
-        { title:       PostTitle 
-          publishDate: PostPublishDate
-          body:        PostBody }
-        

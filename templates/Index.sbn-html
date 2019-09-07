@@ -1,0 +1,8 @@
+{{ for post in posts }}
+<article>
+    <title>
+        {{ post.title }}
+    </title>
+    {{ post.body }}
+</article>
+{{ end }}

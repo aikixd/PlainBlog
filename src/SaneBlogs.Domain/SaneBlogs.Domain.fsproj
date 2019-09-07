@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Page.fs" />
     <Compile Include="Utility.fs" />
     <Compile Include="Path.fs" />
-    <Compile Include="Post.fs" />
+    <Compile Include="Common.fs" />
+    <Compile Include="Entities.fs" />
   </ItemGroup>
 
 </Project>

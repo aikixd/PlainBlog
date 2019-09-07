@@ -9,7 +9,13 @@
     <Compile Include="Parse.fs" />
     <Compile Include="Load.fs" />
     <Compile Include="PostsLoad.fs" />
+    <Compile Include="PagesLoad.fs" />
+    <Compile Include="Render.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.17.1" />
   </ItemGroup>
 
   <ItemGroup>

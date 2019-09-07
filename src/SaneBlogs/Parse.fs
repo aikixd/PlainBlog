@@ -13,6 +13,10 @@ type Property =
     { key: string
       value: string }
 
+type ParseData =
+    { body: string
+      properties: Property list }
+
 let private parseEmpty (line: string) =
     match System.String.IsNullOrWhiteSpace(line) with
     | true -> Ok []
@@ -50,4 +54,6 @@ let rec private parsePropsImpl source props =
     | Error _ -> (source, props)
 
 let parseProps source =
-    parsePropsImpl source []
+    let (body, props) = parsePropsImpl source []
+    
+    { body = body; properties = props }
