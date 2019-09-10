@@ -4,6 +4,7 @@ open Load
 open Posts.Load
 open Pages.Load
 open Render
+open LibSassHost
 
 let loadCollector loadRes =
     match loadRes with
@@ -86,6 +87,16 @@ let main argv =
 
         let indexFile = renderIndex curDir site rig.RenderPage posts
 
+        let! scss =
+            curDir.Path.Append("style\\main.scss")
+            |> Result.bind FilePath.fromPath
+
+        let result = SassCompiler.Compile(scss.ReadAsText ())
+
+        curDir.Path.Append("dist\\style.css")
+        |> Result.bind (FilePath.create result.CompiledContent)
+        |> ignore
+        
         //let result = render posts
 
         //let! indexFile = 

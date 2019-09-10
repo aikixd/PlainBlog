@@ -2,10 +2,19 @@
 <html>
 
 <head>
-  <title>{{ site.name }}</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <title>{{ site.name }}</title>
 </head>
 
 <body>
-    {{ include page }}
+    <header>
+        Welcome to {{ site.name }}!
+    </header>
+    <main>
+        {{ include page }}
+    </main>
+    <footer>
+    </footer>
 </body>
 </html> 
