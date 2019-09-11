@@ -1,0 +1,3 @@
+<nav>
+    <a href="{{ mkLink "index" }}">Home</a>
+</nav>

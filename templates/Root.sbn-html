@@ -12,7 +12,7 @@
         Welcome to {{ site.name }}!
     </header>
     <main>
-        {{ include page }}
+        {{ include doc.template }}
     </main>
     <footer>
     </footer>

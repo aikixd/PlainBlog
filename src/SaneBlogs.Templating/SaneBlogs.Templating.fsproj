@@ -7,10 +7,12 @@
   <ItemGroup>
     <Compile Include="Scriban.fs" />
     <Compile Include="IO.fs" />
+    <Compile Include="Models.fs" />
     <Compile Include="Templates.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.17.1" />
     <PackageReference Include="Scriban" Version="2.1.0" />
   </ItemGroup>
 

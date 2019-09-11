@@ -3,7 +3,7 @@ open Domain
 open Load
 open Posts.Load
 open Pages.Load
-open Render
+open Templating
 open LibSassHost
 
 let loadCollector loadRes =
@@ -15,18 +15,19 @@ let loadCollector loadRes =
         printf "%s" x
         None
 
-let kebabify (str: string) =
-    str.ToLower().Replace(" ", "-").Replace("\"", "")
+
 
 let renderPage (curDir: DirPath) site render posts (page: Page)  =
-    let result = render "Page" site (PageModel.fromPage page) (Array.ofList posts)
+    let posts = List.map PostModel.fromPost posts
+    let result = render site (Array.ofList posts) (DocModel.fromPage page) "Page"
     let kebabed = kebabify page.title.Value
     
     curDir.Path.Append ("dist\\" + kebabed + ".html")
     |> Result.bind (FilePath.create result)
 
 let renderPost (cirDir: DirPath) site render posts post =
-    let result = render "Post" site (PostModel.fromPost post) (Array.ofList posts)
+    let posts = List.map PostModel.fromPost posts
+    let result = render site (Array.ofList posts) (PostModel.fromPost post) "Post"
     let kebabed = kebabify post.title.Value
 
     cirDir.Path.Append("dist\\posts\\" + kebabed + ".html")
@@ -36,7 +37,7 @@ let renderIndex (cirDir: DirPath) site render posts =
     let posts =
         List.map PostModel.fromPost posts
 
-    let result = render "Index" site { name = "blog name" } (Array.ofList posts)
+    let result = render site (Array.ofList posts)
     
     cirDir.Path.Append("dist\\index.html")
     |> Result.bind (FilePath.create result)
@@ -71,21 +72,21 @@ let main argv =
             |> Load.fromDir mkPage
             |> List.choose loadCollector
 
-        let! rig = TemplateRig.load tmplDir
+        let! tmpl = Template.load tmplDir
 
-        let site = { name = "Some blopg name" }
+        let site = { name = "Some blog name" }
 
-        let fn = renderPage curDir site rig.RenderPage posts
+        let fn = renderPage curDir site tmpl.RenderPage posts
         
         let pagesFiles = 
             pages
-            |> List.map fn
+            |> List.map (renderPage curDir site tmpl.RenderPage posts)
 
         let postsFiles =
             posts
-            |> List.map (renderPost curDir site rig.RenderPage posts)
+            |> List.map (renderPost curDir site tmpl.RenderPost posts)
 
-        let indexFile = renderIndex curDir site rig.RenderPage posts
+        let indexFile = renderIndex curDir site tmpl.RenderIndex posts
 
         let! scss =
             curDir.Path.Append("style\\main.scss")

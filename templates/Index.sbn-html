@@ -1,8 +1,10 @@
 {{ for post in posts }}
 <article>
-    <title>
-        {{ post.title }}
-    </title>
-    {{ post.body }}
+    <a href="./posts/{{ kebabify post.title }}.html">
+        <title>
+            {{ post.title }}
+        </title>
+        {{ post.body }}
+    </a>
 </article>
 {{ end }}

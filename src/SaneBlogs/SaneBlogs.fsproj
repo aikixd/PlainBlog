@@ -10,7 +10,6 @@
     <Compile Include="Load.fs" />
     <Compile Include="PostsLoad.fs" />
     <Compile Include="PagesLoad.fs" />
-    <Compile Include="Render.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
