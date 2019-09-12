@@ -27,7 +27,8 @@ module Load =
             match x.Validate () with
             | true -> Ok { title       = x.title.Value
                            publishDate = x.publishDate.Value
-                           body        = x.body.Value }
+                           body        = x.body.Value
+                           intro       = Intro.create x.body.Value }
             | false -> Error (sprintf "Not all properties are defined on post.")
 
     let private applyTitle (data: PostDataAggr) = 

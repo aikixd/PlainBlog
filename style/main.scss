@@ -1,7 +1,103 @@
+$body-width: 960px;
+$default-margin: 20px;
+
+@mixin rooted-block
+{
+    box-sizing: border-box;
+    width: $body-width;
+    margin: 0 auto;
+}
+
 body 
 {
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Open Sans', sans-serif;
+
     > header
     {
-        border: 1px solid red;
+        background: #cdd8ec;
+        margin-top: 0;
+
+        > div
+        {
+            @include rooted-block;
+
+            > H1 
+            {
+                margin-top: 0;
+                > a
+                {
+                    text-decoration: none;
+                    color: #204884;
+                }
+
+                > a:hover
+                {
+                    color: white;
+                }
+            }
+
+            > nav
+            {
+                font-size: 1.3em;
+                
+                > a
+                {
+                    padding-right: 0.6em;
+                    text-decoration: none;
+                    color: #204884;
+                }
+
+                > a:hover
+                {
+                    color: white;
+                }
+            }
+        }
+    }
+
+    > main
+    {
+        @include rooted-block;
+
+        > article
+        {
+            > blockquote
+            {
+                font-style: italic;
+            }
+        }
+    }
+
+    > footer
+    {
+        @include rooted-block;
+        text-align: center;
+        padding: 3em 0;
+        font-size: 0.8em;
+    }
+}
+
+section.index-list
+{
+    > H2
+    {
+        margin-bottom: 0;
+
+        > a
+        {
+            text-decoration: none;
+            color: #204884;
+        }
+    }
+
+    > p.details
+    {
+        color: #888;
+        font-style: italic;
+        font-size: 0.9em;
+        margin-top: -0.1em;
     }
 }

@@ -40,3 +40,12 @@ module Common =
                 Error "Body must be at least two chars long."
             else
                 Ok (X body)
+
+    [<AutoOpen>]
+    module IntroModule =
+        type Intro = | X of string with
+        member x.Value =
+            match x with | X x -> x
+        static member create (body: Body) =
+            let s = body.Value.Split([| "\r\n"; "\n" |], 2, System.StringSplitOptions.RemoveEmptyEntries)
+            X s.[0]

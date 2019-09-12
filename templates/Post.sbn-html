@@ -1,4 +1,4 @@
 <article>
-    <H2>{{ doc.title }}</H2>
-    {{ doc.body }}
+    <H2>{{ post.title }}</H2>
+    {{ post.body }}
 </article>

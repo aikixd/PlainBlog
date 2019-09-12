@@ -66,6 +66,7 @@ let main argv =
             postsDir
             |> Load.fromDir mkPost 
             |> List.choose loadCollector
+            |> List.sortByDescending (fun x -> x.publishDate)
 
         let pages =
             pagesDir

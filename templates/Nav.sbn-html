@@ -1,3 +1,4 @@
 <nav>
-    <a href="{{ mkLink "index" }}">Home</a>
+    <a href="{{ mkLink "/index.html" }}">Home</a>
+    <a href="{{ mkLink "/about.html" }}">About</a>
 </nav>

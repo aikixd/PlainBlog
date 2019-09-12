@@ -60,7 +60,7 @@ module Template =
             
             let so = new Scriban.Runtime.ScriptObject()
             
-            so.Add("Page", page)
+            so.Add("page", page)
 
             Map.iter (fun k v -> so.Add(k, v)) data
 
@@ -70,6 +70,11 @@ module Template =
             ctx.PushGlobal(so)
             
             ctx.TemplateLoader <- new TemplateLoader(this.templatesDir)
+
+            let mutable lexerOpts = new LexerOptions()
+            lexerOpts.KeepTrivia <- true
+
+            ctx.TemplateLoaderLexerOptions <- lexerOpts
             
             this.rootTemplate.Render(ctx)
 
@@ -78,20 +83,20 @@ module Template =
               ("posts", posts :> obj) 
               ("doc",   model :> obj) ]
             |> Map.ofList
-            |> this.Render (PageModel.create template)
+            |> this.Render (PageModel.create template 0)
 
         member this.RenderPost site posts (model: PostModel) template =
             [ ("site", site)
               ("posts", posts) 
               ("post", model :> obj) ]
             |> Map.ofList
-            |> this.Render (PageModel.create template)
+            |> this.Render (PageModel.create template 1)
 
         member this.RenderIndex site posts =
             [ ("site", site :> obj)
               ("posts", posts :> obj) ]
             |> Map.ofList
-            |> this.Render (PageModel.create "Index")
+            |> this.Render (PageModel.create "Index" 0)
 
     let load (path: DirPath) =
         asserted { 

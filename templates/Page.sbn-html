@@ -1,4 +1,2 @@
-<div>
-    <H1>doc.title<H1>
-    body: {{ doc.body }}
-</div>
+<H1>{{ doc.title}}</H1>
+{{ doc.body }}

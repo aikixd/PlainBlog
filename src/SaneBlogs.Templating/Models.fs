@@ -12,9 +12,9 @@ module Models =
         { template: string
           level:    int }
         with
-        static member create template =
+        static member create template level =
             { template = template
-              level    = 0 }
+              level    = level }
 
         static member index =
             { template = "Index"
@@ -31,9 +31,11 @@ module Models =
     type PostModel = 
         { title:       string
           publishDate: System.DateTime
-          body:        string }
+          body:        string
+          intro:       string }
         with
         static member fromPost (post: Post) =
             { title       = post.title.Value
               publishDate = post.publishDate.Value
-              body        = Markdig.Markdown.ToHtml(post.body.Value) }
+              body        = Markdig.Markdown.ToHtml(post.body.Value)
+              intro       = Markdig.Markdown.ToHtml(post.intro.Value) }
