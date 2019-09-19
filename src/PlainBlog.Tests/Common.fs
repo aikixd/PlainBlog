@@ -3,7 +3,6 @@
 open NUnit.Framework
 open Templating
 
-[<TestClass>]
 type CommonTests () =
     [<Test>]
     [<TestCase(0, "/index.html", "./index.html")>]

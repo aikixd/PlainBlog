@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,5 +26,33 @@
     <ProjectReference Include="..\PlainBlog.Domain\PlainBlog.Domain.fsproj" />
     <ProjectReference Include="..\PlainBlog.Templating\PlainBlog.Templating.fsproj" />
   </ItemGroup>
+
+  <Target Name="PrepareRelease" AfterTargets="Publish">
+    <Message Text="Creating publish artifacts" />
+    <ItemGroup>
+      <OutDirFiles Include="$(PublishDir)**\*.*" />
+      <TemplatesFiles Include="$(ContentDir)templates\**\*.*" />
+      <StyleFiles Include="$(ContentDir)style\**\*.*" />
+      <PostsFiles Include="$(ContentDir)posts\**\*.*" />
+      <PagesFiles Include="$(ContentDir)pages\**\*.*" />
+    </ItemGroup>
+    <PropertyGroup>
+      <PublishProfile>$([System.IO.Path]::GetDirectoryName($(PublishDir)))</PublishProfile>
+      <PublishProfile>$([System.IO.Path]::GetFileName($(PublishProfile)))</PublishProfile>
+      <ArtifactsDir>$(SolutionDir)..\publish\</ArtifactsDir>
+      <ContentDir>$(SolutionDir)..\</ContentDir>
+    </PropertyGroup>
+    <Message Text="Publish profile: $(PublishProfile)" />
+    <Message Text="Copying binaries" />
+    <Copy SourceFiles="@(OutDirFiles)" DestinationFiles="@(OutDirFiles->'$(ArtifactsDir)$(PublishProfile)\bin\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Text="Copying templates" />
+    <Copy SourceFiles="@(TemplatesFiles)" DestinationFiles="@(TemplatesFiles->'$(ArtifactsDir)$(PublishProfile)\templates\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Text="Copying style" />
+    <Copy SourceFiles="@(StyleFiles)" DestinationFiles="@(StyleFiles->'$(ArtifactsDir)$(PublishProfile)\style\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Text="Copying posts" />
+    <Copy SourceFiles="@(PostsFiles)" DestinationFiles="@(PostsFiles->'$(ArtifactsDir)$(PublishProfile)\posts\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Text="Copying pages" />
+    <Copy SourceFiles="@(PagesFiles)" DestinationFiles="@(PagesFiles->'$(ArtifactsDir)$(PublishProfile)\pages\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
 
 </Project>

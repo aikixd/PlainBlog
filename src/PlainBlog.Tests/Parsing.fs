@@ -28,7 +28,6 @@ module Docs =
 open Docs
 open Parse
 
-[<TestClass>]
 type TestClass () =
 
     let assertProp (ek, ev) prop =
