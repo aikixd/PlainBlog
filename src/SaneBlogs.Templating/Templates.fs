@@ -78,7 +78,7 @@ module Template =
             
             this.rootTemplate.Render(ctx)
 
-        member this.RenderPage (site: SiteModel) (posts: PostModel[]) (model: DocModel) template =
+        member this.RenderPage site posts (model: DocModel) template =
             [ ("site",  site  :> obj)
               ("posts", posts :> obj) 
               ("doc",   model :> obj) ]

@@ -15,31 +15,30 @@ let loadCollector loadRes =
         printf "%s" x
         None
 
+let prepPosts posts =
+    posts
+    |> List.map PostModel.fromPost
+    |> Array.ofList
 
+let mkPage (tmpl: Rig) site posts (page: Page) =
+    let posts = prepPosts posts
+    ( kebabify page.title.Value, 
+      tmpl.RenderPage site posts (DocModel.fromPage page) "Page" )
 
-let renderPage (curDir: DirPath) site render posts (page: Page)  =
-    let posts = List.map PostModel.fromPost posts
-    let result = render site (Array.ofList posts) (DocModel.fromPage page) "Page"
-    let kebabed = kebabify page.title.Value
+let mkPost (tmpl: Rig) site posts (post: Post) =
+    let posts = prepPosts posts
+    ( "posts\\" + kebabify post.title.Value, 
+      tmpl.RenderPost site posts (PostModel.fromPost post) "Post" )
+
+let mkIndex (tmpl: Rig) site posts () =
+    let posts = prepPosts posts
+    ( "Index",
+      tmpl.RenderIndex site posts )
+
+let generate (curDir: DirPath) render model =
+    let (path, result) = render model
     
-    curDir.Path.Append ("dist\\" + kebabed + ".html")
-    |> Result.bind (FilePath.create result)
-
-let renderPost (cirDir: DirPath) site render posts post =
-    let posts = List.map PostModel.fromPost posts
-    let result = render site (Array.ofList posts) (PostModel.fromPost post) "Post"
-    let kebabed = kebabify post.title.Value
-
-    cirDir.Path.Append("dist\\posts\\" + kebabed + ".html")
-    |> Result.bind (FilePath.create result)
-
-let renderIndex (cirDir: DirPath) site render posts =
-    let posts =
-        List.map PostModel.fromPost posts
-
-    let result = render site (Array.ofList posts)
-    
-    cirDir.Path.Append("dist\\index.html")
+    curDir.Path.Append ("dist\\" + path + ".html")
     |> Result.bind (FilePath.create result)
 
 [<EntryPoint>]
@@ -64,30 +63,26 @@ let main argv =
 
         let posts =
             postsDir
-            |> Load.fromDir mkPost 
+            |> Load.fromDir parsePost 
             |> List.choose loadCollector
             |> List.sortByDescending (fun x -> x.publishDate)
 
         let pages =
             pagesDir
-            |> Load.fromDir mkPage
+            |> Load.fromDir parsePage
             |> List.choose loadCollector
 
         let! tmpl = Template.load tmplDir
 
         let site = { name = "Some blog name" }
-
-        let fn = renderPage curDir site tmpl.RenderPage posts
         
+
         let pagesFiles = 
-            pages
-            |> List.map (renderPage curDir site tmpl.RenderPage posts)
-
+               List.map (generate curDir (mkPage tmpl site posts)  ) pages
         let postsFiles =
-            posts
-            |> List.map (renderPost curDir site tmpl.RenderPost posts)
+               List.map (generate curDir (mkPost tmpl site posts)  ) posts
 
-        let indexFile = renderIndex curDir site tmpl.RenderIndex posts
+        let indexFile = (generate curDir (mkIndex tmpl site posts) ) ()
 
         let! scss =
             curDir.Path.Append("style\\main.scss")
@@ -98,12 +93,6 @@ let main argv =
         curDir.Path.Append("dist\\style.css")
         |> Result.bind (FilePath.create result.CompiledContent)
         |> ignore
-        
-        //let result = render posts
-
-        //let! indexFile = 
-        //    curDir.Path.Append "dist\\index.html"
-        //    |> Result.bind (FilePath.create result)
 
         ()
     }

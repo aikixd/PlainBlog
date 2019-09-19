@@ -32,7 +32,7 @@ module Load =
         | "Title" -> applyTitle data prop.value
         | x -> Error (sprintf "Error: unknown property {%s}" x)
 
-    let mkPage (parsed: Parse.ParseData) =
+    let parsePage (parsed: Parse.ParseData) =
         let conv aggr =
             let (data, errors) = applyProps applyProp parsed.properties (aggr, [])
             match data.ToPage () with

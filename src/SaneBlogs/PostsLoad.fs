@@ -43,7 +43,7 @@ module Load =
         | "PublishDate" -> applyPublishDate data prop.value
         | x -> Error (sprintf "Error: unknown property {%s}" x)
 
-    let mkPost (parsed: Parse.ParseData) =
+    let parsePost (parsed: Parse.ParseData) =
         let conv aggr =
             let (data, errors) = applyProps applyProp parsed.properties (aggr, [])
             match data.ToPost () with
