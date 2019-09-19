@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PlainBlog": {
+      "commandName": "Project",
+      "commandLineArgs": "-d \"..\\..\\..\\..\\..\""
+    }
+  }
+}

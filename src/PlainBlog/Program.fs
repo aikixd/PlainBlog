@@ -44,10 +44,17 @@ let generate (curDir: DirPath) render model =
 [<EntryPoint>]
 let main argv =
     
-    let t = System.IO.Path.GetFullPath(System.IO.Directory.GetCurrentDirectory() + "..\\..\\..\\..\\..\\..")
+    let args = Args.parseArgs argv
 
     let result = asserted {
-        let! curDir = t |> DirPath.create
+        let curDirAppender = 
+            match args.Contains Args.Arguments.Working_Directory with
+            | true -> args.GetResult Args.Arguments.Working_Directory
+            | false -> ".\\"
+        
+        let! curDir = 
+            Path.combine(System.IO.Directory.GetCurrentDirectory(), curDirAppender)
+            |> Result.bind DirPath.fromPath
         
         let! postsDir = 
             curDir.Path.Append "posts"

@@ -10,10 +10,12 @@
     <Compile Include="Load.fs" />
     <Compile Include="PostsLoad.fs" />
     <Compile Include="PagesLoad.fs" />
+    <Compile Include="Args.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Argu" Version="5.5.0" />
     <PackageReference Include="LibSassHost" Version="1.2.6" />
     <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.6" />
     <PackageReference Include="Markdig" Version="0.17.1" />

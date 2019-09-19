@@ -35,8 +35,11 @@ module PathModule =
             | e -> Error e.Message
         
         static member combine ([<ParamArray>] parts) =
-            SysPath.Combine(parts)
-            |> Path.create
+            try
+                SysPath.Combine(parts)
+                |> Path.create
+            with
+            | e -> Error e.Message
     
     // rename to 'Dir'
     type DirPath = | X_ of Path with
