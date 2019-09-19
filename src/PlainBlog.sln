@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs", "SaneBlogs\SaneBlogs.fsproj", "{DBA261CF-D7D9-4A49-9E5B-AC11D7DEC7DD}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PlainBlog", "PlainBlog\PlainBlog.fsproj", "{DBA261CF-D7D9-4A49-9E5B-AC11D7DEC7DD}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Templating", "SaneBlogs.Templating\SaneBlogs.Templating.fsproj", "{DEBC9C81-22D5-42DD-A272-82C8AD199E0A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PlainBlog.Templating", "PlainBlog.Templating\PlainBlog.Templating.fsproj", "{DEBC9C81-22D5-42DD-A272-82C8AD199E0A}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Domain", "SaneBlogs.Domain\SaneBlogs.Domain.fsproj", "{FD80D14F-D229-42BC-BECC-45D4A0A541A6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PlainBlog.Domain", "PlainBlog.Domain\PlainBlog.Domain.fsproj", "{FD80D14F-D229-42BC-BECC-45D4A0A541A6}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SaneBlogs.Tests", "SaneBlogs.Tests\SaneBlogs.Tests.fsproj", "{5969DE2F-DE91-4F6D-814E-3BE4E2846D95}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PlainBlog.Tests", "PlainBlog.Tests\PlainBlog.Tests.fsproj", "{5969DE2F-DE91-4F6D-814E-3BE4E2846D95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

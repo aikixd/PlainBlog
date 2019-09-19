@@ -1,4 +1,4 @@
-﻿namespace SaneBlogs.Templating
+﻿namespace PlainBlog.Templating
 
 open System.IO
 
