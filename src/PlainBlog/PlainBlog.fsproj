@@ -28,7 +28,12 @@
   </ItemGroup>
 
   <Target Name="PrepareRelease" AfterTargets="Publish">
-    <Message Text="Creating publish artifacts" />
+    <PropertyGroup>
+      <PublishProfile>$([System.IO.Path]::GetDirectoryName($(PublishDir)))</PublishProfile>
+      <PublishProfile>$([System.IO.Path]::GetFileName($(PublishProfile)))</PublishProfile>
+      <ArtifactsDir>$(SolutionDir)..\publish\</ArtifactsDir>
+      <ContentDir>$(SolutionDir)..\</ContentDir>
+    </PropertyGroup>
     <ItemGroup>
       <OutDirFiles Include="$(PublishDir)**\*.*" />
       <TemplatesFiles Include="$(ContentDir)templates\**\*.*" />
@@ -36,12 +41,7 @@
       <PostsFiles Include="$(ContentDir)posts\**\*.*" />
       <PagesFiles Include="$(ContentDir)pages\**\*.*" />
     </ItemGroup>
-    <PropertyGroup>
-      <PublishProfile>$([System.IO.Path]::GetDirectoryName($(PublishDir)))</PublishProfile>
-      <PublishProfile>$([System.IO.Path]::GetFileName($(PublishProfile)))</PublishProfile>
-      <ArtifactsDir>$(SolutionDir)..\publish\</ArtifactsDir>
-      <ContentDir>$(SolutionDir)..\</ContentDir>
-    </PropertyGroup>
+    <Message Text="Creating publish artifacts" />
     <Message Text="Publish profile: $(PublishProfile)" />
     <Message Text="Copying binaries" />
     <Copy SourceFiles="@(OutDirFiles)" DestinationFiles="@(OutDirFiles->'$(ArtifactsDir)$(PublishProfile)\bin\%(RecursiveDir)%(Filename)%(Extension)')" />
