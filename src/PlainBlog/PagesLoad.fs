@@ -12,17 +12,17 @@ module Load =
         static member Empty source =
             match Body.create source with
             | Ok x -> Ok { title = None; body = Some x }
-            | Error x -> Error x
+            | Error x -> Error [ x ]
 
         member x.Validate () =
                x.title.IsSome
             && x.body .IsSome
 
-        member x.ToPage () : Result<Page, string> =
+        member x.ToPage () : Result<Page, string list> =
             match x.Validate () with
             | true -> Ok { title = x.title.Value
                            body =  x.body.Value }
-            | false -> Error (sprintf "Not all properties are defined on page")
+            | false -> Error [ (sprintf "Not all properties are defined on page") ]
 
     let private applyTitle (data: PageDataAggr) =
         bindApply Title.create (fun x -> { data with title = Some x })
@@ -38,7 +38,7 @@ module Load =
             match data.ToPage () with
             | Ok data' -> Ok { entity = data' 
                                errors = errors }
-            | Error x -> Error (sprintf "Couldn't create page data: %s" x)
+            | Error x -> Error ( "Couldn't create page data" :: x )
         
         PageDataAggr.Empty parsed.body
         |> Result.bind conv

@@ -16,7 +16,7 @@ module Load =
             | Ok x -> Ok { title       = None 
                            publishDate = None
                            body        = Some x }
-            | Error x -> Error x
+            | Error x -> Error [ x ]
     
         member x.Validate () =
                x.title      .IsSome
@@ -49,7 +49,7 @@ module Load =
             match data.ToPost () with
             | Ok data' -> Ok { entity = data' 
                                errors = errors }
-            | Error x -> Error (sprintf "Couldn't create page data: %s" x)
+            | Error x -> Error ("Couldn't create post data" :: x :: errors)
         
         PostDataAggr.Empty parsed.body
         |> Result.bind conv

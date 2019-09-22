@@ -9,10 +9,16 @@ open LibSassHost
 let loadCollector loadRes =
     match loadRes with
     | Ok x ->
-        List.iter (fun x' -> printf "Warning: File '%s':\r\n  %s" x.file.Value x') x.entityLoad.errors
+        printfn "√ - %s" x.file.Value
+        List.iter (fun x' -> printfn "    ! - %s" x') x.entityLoad.errors
         Some x.entityLoad.entity
     | Error x -> 
-        printf "%s" x
+        printf "X -"
+        List.iteri 
+            (fun i x' -> printfn "%s %s" 
+                                 (if i = 0 then "" else "    >")
+                                 x' ) 
+            x
         None
 
 let prepPosts posts =
@@ -44,6 +50,8 @@ let generate (curDir: DirPath) render model =
 [<EntryPoint>]
 let main argv =
     
+    Console.OutputEncoding <- Text.Encoding.UTF8;
+
     let args = Args.parseArgs argv
 
     let result = asserted {
@@ -55,6 +63,8 @@ let main argv =
         let! curDir = 
             Path.combine(System.IO.Directory.GetCurrentDirectory(), curDirAppender)
             |> Result.bind DirPath.fromPath
+
+        printfn "Working dir: %s" curDir.Value
         
         let! postsDir = 
             curDir.Path.Append "posts"
@@ -101,7 +111,6 @@ let main argv =
         |> Result.bind (FilePath.create result.CompiledContent)
         |> ignore
 
-        ()
     }
 
     match result with
@@ -110,15 +119,3 @@ let main argv =
     | Error x ->
         printfn "Could not determine required directories: \r\n%s" x
         1
-
-        
-
-    // load the templates
-    // load posts
-    // analyze posts
-    //   - sort by date
-    //   - create series
-    // create side bar timeline
-    // create posts list pages
-    // create service pages
-    

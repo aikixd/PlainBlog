@@ -19,8 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Argu" Version="5.5.0" />
     <PackageReference Include="LibSassHost" Version="1.2.6" />
-    <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.6" Condition="'$(RuntimeIdentifier)' == 'linux-x64'" />
-    <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.6" Condition="'$(RuntimeIdentifier)' == 'win-x64'" />
+    <PackageReference Include="LibSassHost.Native.linux-x64" Version="1.2.6" Condition="'$(RuntimeIdentifier)' == 'linux-x64' Or '$(RuntimeIdentifier)' == ''" />
+    <PackageReference Include="LibSassHost.Native.win-x64" Version="1.2.6" Condition="'$(RuntimeIdentifier)' == 'win-x64' Or '$(RuntimeIdentifier)' == ''" />
     <PackageReference Include="Markdig" Version="0.17.1" />
   </ItemGroup>
 

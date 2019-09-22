@@ -26,7 +26,7 @@ module Common =
         static member parse (input: string) =
             match System.DateTime.TryParse input with
             | (true, v) -> Ok (PublishDate.create v)
-            | (false, _) -> Error (sprintf "Date was not in the correct format.")
+            | (false, _) -> Error (sprintf "Date is not in the correct format: {%s}" input)
 
     [<AutoOpen>]
     module BodyModule =

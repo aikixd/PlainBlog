@@ -38,7 +38,7 @@ let file mkEntity (file: FilePath) =
         match r with
         | Ok er -> Ok { file = file
                         entityLoad = er }
-        | Error x -> Error (sprintf "Couldn't load file {%s}: %s" file.Value x)
+        | Error x -> Error ( sprintf "Cant't load file { %s }" file.Value :: x )
 
     match file.Extension with
     | ".md" ->
@@ -47,7 +47,8 @@ let file mkEntity (file: FilePath) =
         |> mkEntity
         |> mkResult
 
-    | x -> Error (sprintf "Can't load file {%s}. Unknown extension: {%s}" file.Value x )
+    | x -> Error [ sprintf "Can't load file { %s }" file.Value
+                   sprintf "Unknown extension: { %s }" x ]
 
 let fromDir mkEntity (dir: DirPath) =
     dir.GetFiles ()
