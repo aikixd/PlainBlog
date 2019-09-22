@@ -40,7 +40,7 @@
       <OutDirFiles Include="$(PublishDir)**\*.*" />
       <TemplatesFiles Include="$(ContentDir)templates\**\*.*" />
       <StyleFiles Include="$(ContentDir)style\**\*.*" />
-      <PostsFiles Include="$(ContentDir)posts\**\*.*" />
+      <PostsFiles Include="$(ContentDir)posts\001 - First post sample.md;$(ContentDir)posts\002 - Second post sample.md" />
       <PagesFiles Include="$(ContentDir)pages\**\*.*" />
     </ItemGroup>
     <Message Text="Creating publish artifacts" />
