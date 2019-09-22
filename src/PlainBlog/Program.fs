@@ -91,8 +91,7 @@ let main argv =
 
         let! tmpl = Template.load tmplDir
 
-        let site = { name = "Some blog name" }
-        
+        let site = { name = args.GetResult Args.Arguments.Blog_Name }
 
         let pagesFiles = 
                List.map (generate curDir (mkPage tmpl site posts)  ) pages

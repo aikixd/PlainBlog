@@ -2,7 +2,7 @@
   "profiles": {
     "PlainBlog": {
       "commandName": "Project",
-      "commandLineArgs": "-d \"..\\..\\..\\..\\..\""
+      "commandLineArgs": "-d \"..\\..\\..\\..\\..\" --blog-name=\"Example blog\""
     }
   }
 }
