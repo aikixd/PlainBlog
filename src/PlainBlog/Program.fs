@@ -41,20 +41,14 @@ let mkIndex (tmpl: Rig) site posts () =
     ( "Index",
       tmpl.RenderIndex site posts )
 
-let generate (curDir: DirPath) render model =
+let generate (pubDir: Path) render model =
     let (path, result) = render model
     
-    curDir.Path.Append ("dist\\" + path + ".html")
+    pubDir.Append (path + ".html")
     |> Result.bind (FilePath.create result)
 
-[<EntryPoint>]
-let main argv =
-    
-    Console.OutputEncoding <- Text.Encoding.UTF8;
-
-    let args = Args.parseArgs argv
-
-    let result = asserted {
+let generateSite (args: Argu.ParseResults<Args.Arguments>) =
+    asserted {
         let curDirAppender = 
             match args.Contains Args.Arguments.Working_Directory with
             | true -> args.GetResult Args.Arguments.Working_Directory
@@ -63,6 +57,13 @@ let main argv =
         let! curDir = 
             Path.combine(System.IO.Directory.GetCurrentDirectory(), curDirAppender)
             |> Result.bind DirPath.fromPath
+
+        let! pubDir =
+            match args.Contains Args.Arguments.Out_Dir with
+            | true ->
+                curDir.Path.Append (args.GetResult Args.Arguments.Out_Dir)
+            | false ->
+                curDir.Path.Append "dist"
 
         printfn "Working dir: %s" curDir.Value
         
@@ -94,11 +95,11 @@ let main argv =
         let site = { name = args.GetResult Args.Arguments.Blog_Name }
 
         let pagesFiles = 
-               List.map (generate curDir (mkPage tmpl site posts)  ) pages
+               List.map (generate pubDir (mkPage tmpl site posts)  ) pages
         let postsFiles =
-               List.map (generate curDir (mkPost tmpl site posts)  ) posts
+               List.map (generate pubDir (mkPost tmpl site posts)  ) posts
 
-        let indexFile = (generate curDir (mkIndex tmpl site posts) ) ()
+        let indexFile = (generate pubDir (mkIndex tmpl site posts) ) ()
 
         let! scss =
             curDir.Path.Append("style\\main.scss")
@@ -106,15 +107,31 @@ let main argv =
 
         let result = SassCompiler.Compile(scss.ReadAsText ())
 
-        curDir.Path.Append("dist\\style.css")
+        pubDir.Append("style.css")
         |> Result.bind (FilePath.create result.CompiledContent)
         |> ignore
-
     }
 
-    match result with
-    | Ok () ->
-        0
-    | Error x ->
-        printfn "Could not determine required directories: \r\n%s" x
-        1
+[<EntryPoint>]
+let main argv =
+    
+    Console.OutputEncoding <- Text.Encoding.UTF8;
+
+    let args =
+        try
+            Some (Args.parseArgs argv)
+        with e -> 
+            printfn "%s" e.Message
+            None
+
+    match args with
+    | Some args ->
+        let result = generateSite args
+
+        match result with
+        | Ok () ->
+            0
+        | Error x ->
+            printfn "Could not determine required directories: \r\n%s" x
+            1
+    | None -> 0
