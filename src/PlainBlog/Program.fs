@@ -21,29 +21,19 @@ let loadCollector loadRes =
             x
         None
 
-let prepPosts posts =
-    posts
-    |> List.map PostModel.fromPost
-    |> Array.ofList
-
-let mkPage (tmpl: Rig) site posts (page: Page) =
-    let posts = prepPosts posts
+let mkPage render toHtml (page: Page) =
     ( kebabify page.title.Value, 
-      tmpl.RenderPage site posts (DocModel.fromPage page) "Page" )
+      render (DocModel.fromPage toHtml page) "Page" )
 
-let mkPost (tmpl: Rig) site posts (post: Post) =
-    let posts = prepPosts posts
+let mkPost render toHtml (post: Post) =
     ( "posts\\" + kebabify post.title.Value, 
-      tmpl.RenderPost site posts (PostModel.fromPost post) "Post" )
+      render (PostModel.fromPost toHtml post) "Post" )
 
-let mkIndex (tmpl: Rig) site posts () =
-    let posts = prepPosts posts
+let mkIndex render =
     ( "Index",
-      tmpl.RenderIndex site posts )
+      render () )
 
-let generate (pubDir: Path) render model =
-    let (path, result) = render model
-    
+let saveHtml (pubDir: Path) (path, result) =
     pubDir.Append (path + ".html")
     |> Result.bind (FilePath.create result)
 
@@ -85,6 +75,14 @@ let generateSite (args: Argu.ParseResults<Args.Arguments>) =
             |> List.choose loadCollector
             |> List.sortByDescending (fun x -> x.publishDate)
 
+        let mdToHtml = Markdown.mdToHtml (args.TryGetResult Args.Arguments.Markdown_Extensions)
+
+        let postModels =
+            posts
+            |> List.map (PostModel.fromPost mdToHtml)
+            |> Array.ofList
+
+
         let pages =
             pagesDir
             |> Load.fromDir parsePage
@@ -94,12 +92,19 @@ let generateSite (args: Argu.ParseResults<Args.Arguments>) =
 
         let site = { name = args.GetResult Args.Arguments.Blog_Name }
 
-        let pagesFiles = 
-               List.map (generate pubDir (mkPage tmpl site posts)  ) pages
-        let postsFiles =
-               List.map (generate pubDir (mkPost tmpl site posts)  ) posts
+        let (|<) fn x = fn x
 
-        let indexFile = (generate pubDir (mkIndex tmpl site posts) ) ()
+        let pagesFiles = 
+            pages
+            |> List.map ((mkPage (tmpl.RenderPage site postModels) mdToHtml) >> (saveHtml pubDir))
+        let postsFiles =
+            posts
+            |> List.map ((mkPost (tmpl.RenderPost site postModels) mdToHtml) >> (saveHtml pubDir))
+
+        let indexFile = 
+            tmpl.RenderIndex site postModels
+            |> mkIndex 
+            |> saveHtml pubDir
 
         let! scss =
             curDir.Path.Append("style\\main.scss")

@@ -24,9 +24,9 @@ module Models =
         { title: string
           body:  string }
         with
-        static member fromPage (page: Page) =
+        static member fromPage toHtml (page: Page) =
             { title = page.title.Value
-              body  = Markdig.Markdown.ToHtml(page.body.Value) }
+              body  = toHtml page.body.Value }
 
     type PostModel = 
         { title:       string
@@ -34,8 +34,8 @@ module Models =
           body:        string
           intro:       string }
         with
-        static member fromPost (post: Post) =
+        static member fromPost toHtml (post: Post) =
             { title       = post.title.Value
               publishDate = post.publishDate.Value
-              body        = Markdig.Markdown.ToHtml(post.body.Value)
-              intro       = Markdig.Markdown.ToHtml(post.intro.Value) }
+              body        = toHtml post.body.Value
+              intro       = toHtml post.intro.Value }

@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Compile Include="Scriban.fs" />
-    <Compile Include="IO.fs" />
+    <Compile Include="Markdown.fs" />
     <Compile Include="Models.fs" />
     <Compile Include="Templates.fs" />
   </ItemGroup>

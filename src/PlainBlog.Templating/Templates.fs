@@ -92,7 +92,7 @@ module Template =
             |> Map.ofList
             |> this.Render (PageModel.create template 1)
 
-        member this.RenderIndex site posts =
+        member this.RenderIndex site posts () =
             [ ("site", site :> obj)
               ("posts", posts :> obj) ]
             |> Map.ofList
