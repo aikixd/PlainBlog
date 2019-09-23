@@ -23,7 +23,7 @@
         {{ include page.template }}
     </main>
     <footer>
-        "Powered" by <a href="">PlainBlog</a>
+        "Powered" by <a href="https://github.com/aikixd/PlainBlog">PlainBlog</a>
     </footer>
 </body>
 </html> 
