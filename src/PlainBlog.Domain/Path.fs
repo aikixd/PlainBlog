@@ -41,7 +41,6 @@ module PathModule =
             with
             | e -> Error e.Message
     
-    // rename to 'Dir'
     type DirPath = | X_ of Path with
         member x.Value =
             match x with X_ x -> x.Value
@@ -80,7 +79,6 @@ module PathModule =
             | true -> Ok (X_ path)
             | false -> Error (sprintf "Path is not a directory: {%s}."  path.Value)
 
-    // rename to File
     and FilePath = | X_ of Path with
         member x.Value =
             match x with X_ x -> x.Value
@@ -105,3 +103,86 @@ module PathModule =
             match path.IsFilePath with
             | true -> Ok (X_ path)
             | false -> Error (sprintf "Path is not a file: {%s}."  path.Value)
+
+    let copyFile (source: FilePath) (dest: Path) =
+        try
+            System.IO.File.Copy(source.Value, dest.Value)
+            Result.Ok ()
+        with
+        | :? System.UnauthorizedAccessException as e ->
+            Result.Error ("Unauthorized", e :> System.Exception)
+        | :? System.IO.DirectoryNotFoundException as e ->
+            Result.Error ("Directory not found", e :> System.Exception)
+        | e ->
+            Result.Error ("Error", e)
+
+    let copyDir (source: DirPath) (dest: DirPath) =
+        let mkDestFilePath (x: FilePath) =
+            let name = x.Name + x.Extension
+            match dest.Path.Append name with
+            | Ok path -> Ok (x, path)
+            | Error x -> Error x
+
+        let resultFolder aggr cur =
+            match (aggr, cur) with
+            | (Ok aggr, Ok cur) -> Ok (cur :: aggr)
+            | (Ok _, Error cur) -> Error [ cur ]
+            | (Error aggr, Ok _) -> Error aggr
+            | (Error aggr, Error cur) -> Error (cur :: aggr)
+
+        let resApply f x =
+            match (f, x) with
+            | (Ok f, Ok x) -> Ok <| f x
+            | (Error f, Error x) -> Error (x @ f)
+            | (Error f, Ok _) -> Error f
+            | (Ok _, Error x) -> Error x
+
+        let (<*>) = resApply
+
+        let srcFiles = source.GetFiles () |> List.ofArray
+
+        let rec mapResult f list =
+            let cons head tail = head :: tail
+            let consElev = Ok cons
+            
+            match list with
+            | [] -> Ok []
+            | head :: tail ->
+                let res = f head
+                let list = (mapResult f tail)
+
+                let a = resApply consElev res
+
+                let r = resApply a list
+
+                r
+
+        let elevateError x =
+            match x with
+            | Ok x -> Ok x
+            | Error x -> Error [ x ]
+
+        let mapped = mapResult (mkDestFilePath >> elevateError) srcFiles
+
+        let pairs =
+            source.GetFiles ()
+            |> Array.map mkDestFilePath
+            |> Array.map (function (s, Ok d) -> Ok (s, d) | (_, Error m) -> Error m)
+            |> Array.fold resultFolder (Ok [])
+
+
+
+        let chckErrs =
+            match Array.exists (function Error x -> true | _ -> false) pairs with
+            | true -> Ok pairs
+            | false -> Array.choose (function Error x -> Some x | _ -> None) pairs |> Error
+
+        let cp =
+            List.ofArray
+            >> List.choose (function Ok x -> Some x | _ -> None)
+            >> List.map (fun (s, d) -> copyFile s d)
+            >> List.choose (function Error x -> Some x | _ -> None)
+
+        ()
+
+    

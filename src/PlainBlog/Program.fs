@@ -69,6 +69,10 @@ let generateSite (args: Argu.ParseResults<Args.Arguments>) =
             curDir.Path.Append "templates"
             |> Result.bind DirPath.fromPath
 
+        let! staticDir =
+            curDir.Path.Append "static"
+            |> Result.bind DirPath.fromPath
+
         let posts =
             postsDir
             |> Load.fromDir parsePost 
@@ -91,8 +95,6 @@ let generateSite (args: Argu.ParseResults<Args.Arguments>) =
         let! tmpl = Template.load tmplDir
 
         let site = { name = args.GetResult Args.Arguments.Blog_Name }
-
-        let (|<) fn x = fn x
 
         let pagesFiles = 
             pages
